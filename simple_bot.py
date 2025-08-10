@@ -31,7 +31,7 @@ class SimpleConfig:
     
     def __init__(self):
         # Bot credentials - embedded for automatic deployment
-        self.bot_token = os.getenv("BOT_TOKEN", "8435159197:AAEfNaMfesHU2qhLFh8FsPbP3rEewn3BQyg")
+        self.bot_token = os.getenv("BOT_TOKEN", "8435159197:AAFoN6FGlhpH9r8HYoczrp_iBl3CyrUe_sY")
         self.api_id = os.getenv("API_ID", "26176218")
         self.owner_id = int(os.getenv("OWNER_ID", "1096693642"))
         
