@@ -159,20 +159,44 @@ class SVGToTGSConverter:
     async def _run_lottie_convert(self, svg_path: str, tgs_path: str) -> bool:
         """Convert SVG to TGS using lottie_convert.py command line tool"""
         try:
-            # Find lottie_convert.py
-            lottie_convert_path = "/home/runner/workspace/.pythonlibs/bin/lottie_convert.py"
-            
-            # Prepare conversion command
-            cmd = [
-                'python', lottie_convert_path,
-                svg_path,
-                tgs_path,
-                '--sanitize',  # Apply Telegram sticker requirements
-                '--optimize', '0',  # No optimization for fastest speed
-                '--fps', '30',  # Lower FPS for faster processing
-                '--width', '512',  # Force width to 512
-                '--height', '512'  # Force height to 512
+            # Try to find lottie_convert.py in multiple possible locations
+            possible_paths = [
+                "/home/runner/workspace/.pythonlibs/bin/lottie_convert.py",
+                "/opt/render/project/src/.pythonlibs/bin/lottie_convert.py",
+                "/usr/local/bin/lottie_convert.py",
+                "lottie_convert.py"  # Try as direct command
             ]
+            
+            lottie_convert_path = None
+            for path in possible_paths:
+                if os.path.exists(path):
+                    lottie_convert_path = path
+                    break
+            
+            # If not found, try using python -m lottie instead
+            if not lottie_convert_path:
+                cmd = [
+                    'python', '-m', 'lottie',
+                    svg_path,
+                    tgs_path,
+                    '--sanitize',  # Apply Telegram sticker requirements
+                    '--optimize', '0',  # No optimization for fastest speed
+                    '--fps', '30',  # Lower FPS for faster processing
+                    '--width', '512',  # Force width to 512
+                    '--height', '512'  # Force height to 512
+                ]
+            else:
+                # Prepare conversion command with found path
+                cmd = [
+                    'python', lottie_convert_path,
+                    svg_path,
+                    tgs_path,
+                    '--sanitize',  # Apply Telegram sticker requirements
+                    '--optimize', '0',  # No optimization for fastest speed
+                    '--fps', '30',  # Lower FPS for faster processing
+                    '--width', '512',  # Force width to 512
+                    '--height', '512'  # Force height to 512
+                ]
             
             logger.info(f"Running conversion command: {' '.join(cmd)}")
             
